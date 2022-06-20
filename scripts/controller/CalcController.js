@@ -45,18 +45,19 @@ class CalcController {
             if (this.isOperator(value)) {
                 this.setLastOperation(value);
             } else if (isNaN(value)) {
-                this._operation.push(value)
-            }
-            else {
 
+            } else {
+                this._operation.push(value);
             }
-        } else {
-            this.setLastOperation(parseInt(value));
         }
+        else {
+            this.setLastOperation(parseInt(this.getLastOperation().toString() + value.toString()));
+        }
+
+        console.log(this._operation);
     }
 
-    execOperation(buttonValue) { 
-        console.log(buttonValue)   
+    execOperation(buttonValue) {
         switch (buttonValue) {
             case 'ac':
                 this.clearAll();
@@ -67,13 +68,13 @@ class CalcController {
             case 'soma':
                 this.addOperation('+');
                 break;
-            case 'subtraçao':
+            case 'subtracao':
                 this.addOperation('-');
                 break;
             case 'divisao':
                 this.addOperation('/');
                 break;
-            case 'multiplicaçao':
+            case 'multiplicacao':
                 this.addOperation('*');
                 break;
             case 'porcento':
@@ -108,11 +109,11 @@ class CalcController {
     initButtonsEvents() {
         let buttons = document.querySelectorAll("#buttons > g, #parts > g");
         buttons.forEach(button => {
-            this.addEventListenerAll(button, "click drag", event => {
+            this.addEventListenerAll(button, "click drag", () => {
                 this.execOperation(button.className.baseVal.replace("btn-", ""))
             })
 
-            this.addEventListenerAll(button, "mouseover mousedown mouseup", event => {
+            this.addEventListenerAll(button, "mouseover mousedown mouseup", () => {
                 button.style.cursor = "pointer";
             })
         })
