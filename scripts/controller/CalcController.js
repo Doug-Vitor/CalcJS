@@ -143,7 +143,11 @@ class CalcController {
     }
 
     getResult() {
-        return eval(this._operation.join(""));
+        try {
+            return eval(this._operation.join(""));
+        } catch (error) {
+            this.setError(error)
+        }
     }
 
     calc() {
@@ -304,11 +308,23 @@ class CalcController {
         this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
     }
 
+    setError() {
+        alert('Ocorreu um erro.');
+        setTimeout(() => {
+            this._displayCalc = 'Error';
+        }, 1)
+    }
+
     get displayCalc() {
         return this._displayCalcEl.innerHTML;
     }
 
     set displayCalc(value) {
+        if (value.toString().length > 10) {
+            this.setError();
+            return;
+        }
+
         this._displayCalcEl.innerHTML = value;
     }
 
