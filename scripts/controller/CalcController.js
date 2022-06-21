@@ -14,6 +14,23 @@ class CalcController {
 
         this.initialize();
         this.initButtonsEvents();
+        this.initKeyboard();
+    }
+
+    pasteFromClipboard() {
+        document.addEventListener('paste', event => {
+            let content = event.clipboardData.getData('Text');
+            this.displayCalc = parseFloat(content);
+        })
+    }
+
+    copyToClipboard() {
+        let input = document.createElement('input');
+        input.value = this.displayCalc;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('Copy');
+        input.remove();
     }
 
     initialize() {
@@ -23,6 +40,51 @@ class CalcController {
         }, 1000);
 
         this.updateDisplay();
+        this.pasteFromClipboard();
+    }
+
+    initKeyboard() {
+        document.addEventListener('keyup', event => {
+            switch (event.key) {
+                case 'Escape':
+                    this.clearAll();
+                    break;
+                case 'Backspace':
+                    this.clearEntry();
+                    break;
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '%':
+                    this.addOperation(event.key);
+                    break;
+                case 'Enter':
+                case '=':
+                    this.calc();
+                    break;
+                case '.':
+                case ',':
+                    this.addDot();
+                    break;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    this.addOperation(parseInt(event.key));
+                    break;
+
+                case 'c':
+                    if (event.ctrlKey) this.copyToClipboard();
+                break;
+            }
+        })
     }
 
     getLastOperation() {
